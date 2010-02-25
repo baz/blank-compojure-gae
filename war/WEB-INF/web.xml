@@ -2,7 +2,7 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
   <servlet>
     <servlet-name>mp</servlet-name>
-    <servlet-class>myproject.servlet</servlet-class>
+    <servlet-class>myproject.helloworld</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>mp</servlet-name>
