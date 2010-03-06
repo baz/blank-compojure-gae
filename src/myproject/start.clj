@@ -2,8 +2,8 @@
 ; the original application is decorated by a function that sets up the
 ; app engine services.
 
-(ns myproject.start
-  (:use myproject.helloworld)
+(ns vehicle.gae-proxy
+  (:use vehicle.ignition)
   (:use compojure.server.jetty compojure.http compojure.control))
 
 (defmacro with-app-engine
@@ -40,8 +40,11 @@
   ([]
     (init-app-engine "/tmp"))
   ([dir]
-    (com.google.apphosting.api.ApiProxy/setDelegate
-    (proxy [com.google.appengine.tools.development.ApiProxyLocalImpl] [(java.io.File. dir)]))))
+    (let [proxy-factory (com.google.appengine.tools.development.ApiProxyLocalFactory.)
+    environment (proxy [com.google.appengine.tools.development.LocalServerEnvironment] []
+    (getAppDir [] (java.io.File dir)))
+    api-proxy (.create proxy-factory environment)]
+    (com.google.apphosting.api.ApiProxy/setDelegate api-proxy))))
 
 ;; make sure every thread has the environment set up
 
@@ -49,4 +52,4 @@
   []
   (do
     (init-app-engine)
-    (run-server {:port 8080} "/*" (servlet (environment-decorator helloworld)))))
+    (run-server {:port 8080} "/*" (servlet (environment-decorator ignition)))))
