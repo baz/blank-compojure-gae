@@ -1,18 +1,18 @@
 <project name="myproject" basedir="." default="compile">
 
   <property environment="env" />
-  <property name="servlet.file" value="myproject.start" />
-  <property name="appengine-clj.file" value="${user.home}/Development/_Libraries/Clojure/gae/appengine-clj.jar" />
+  <property name="servlet.file" value="myproject.gae-proxy" />
+  <!-- Compojure, Enlive, appengine-clj, etc. plus all their dependancies -->
+  <property name="libraries.dir" value="${user.home}/Development/_Libraries/Clojure" />
   <!-- App Engine SDK root -->
-  <property name="gae-sdk.dir" location="${user.home}/Development/_Libraries/appengine-java-sdk-1.2.8" />
-  <!-- Compojure plus all it's dependancies -->
-  <property name="lib-compojure.dir" value="${user.home}/Development/_Libraries/Clojure/compojure" />
+  <property name="gae-sdk.dir" location="${user.home}/Development/_Libraries/appengine-java-sdk-1.3.1" />
   <!-- VimClojure plus all it's dependancies -->
   <property name="vimclojure.dir" value="${user.home}/.vim/vendor/vimclojure/lib/vimclojure" />
 
   <property name="classes.dir" value="war/WEB-INF/classes" />
   <property name="lib.dir" value="war/WEB-INF/lib" />
   <property name="src.dir" value="src" />
+  <property name="templates.dir" value="src/myproject/templates" />
 
   <import file="${gae-sdk.dir}/config/user/ant-macros.xml"/>
 
@@ -39,12 +39,14 @@
   </target>
 
   <target name="copyjars">
-    <copy file="${appengine-clj.file}" todir="${lib.dir}"/>
     <copy todir="${lib.dir}" flatten="true" includeEmptyDirs="No">
-      <fileset dir="${lib-compojure.dir}" />
+      <fileset dir="${libraries.dir}" />
       <fileset dir="${gae-sdk.dir}/lib/user">
         <include name="*sdk*.jar" />
       </fileset>
+    </copy>
+	<copy todir="${classes.dir}/templates" includeEmptyDirs="No">
+      <fileset dir="${templates.dir}" />
     </copy>
   </target>
 
